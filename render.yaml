@@ -1,0 +1,18 @@
+# Deploy from Render Dashboard -> New -> Blueprint after pushing these files to Git.
+# Filantrophy AI uses a single process because HMAC nonce replay protection is in memory.
+services:
+  - type: web
+    name: filantrophy-ai
+    runtime: python
+    rootDir: fastapi_service
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: FILANTROPHY_SHARED_SECRET
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
